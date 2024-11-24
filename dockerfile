@@ -1,39 +1,44 @@
-# Use an official PHP image as the base image
-FROM php:8.1-fpm
+# Use the official PHP image as the base image
+FROM php:8.0-fpm
 
 # Set working directory
 WORKDIR /var/www
 
-# Install system dependencies for PHP extensions and Composer
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
+    build-essential \
     libpng-dev \
-    libjpeg-dev \
+    libjpeg62-turbo-dev \
     libfreetype6-dev \
+    locales \
     zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
     git \
     curl \
+    libonig-dev \
     libxml2-dev \
-    libssl-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql bcmath \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug
+    libzip-dev
 
-# Install Composer (PHP Dependency Manager)
-RUN curl -sS https://getcomposer.org/installer | php
-RUN mv composer.phar /usr/local/bin/composer
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy your application files
-COPY . .
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-# Install Laravel dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set up environment variables (like database credentials, etc.)
-ENV APP_KEY=YOUR_APP_KEY
+# Copy existing application directory contents
+COPY . /var/www
 
-# Expose the port Laravel will listen on
+# Copy existing application directory permissions
+COPY --chown=www-data:www-data . /var/www
+
+# Change current user to www
+USER www-data
+
+# Expose port 9000 and start php-fpm server
 EXPOSE 9000
-
-# Command to run PHP-FPM server
 CMD ["php-fpm"]

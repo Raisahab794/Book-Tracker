@@ -1,20 +1,19 @@
-<!-- resources/views/dashboard.blade.php -->
 
 @extends('layouts.app')
 
 @section('content')
 <style>
     .icon-container {
-        width: 2.5rem; /* 40px */
-        height: 2.5rem; /* 40px */
+        width: 2.5rem; 
+        height: 2.5rem; 
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 50%;
     }
     .icon {
-        width: 1.5rem; /* 24px */
-        height: 1.5rem; /* 24px */
+        width: 1.5rem; 
+        height: 1.5rem; 
     }
 </style>
 

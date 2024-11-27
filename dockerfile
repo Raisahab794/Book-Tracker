@@ -37,6 +37,9 @@ COPY . /var/www
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . /var/www
 
+# Set permissions for storage and cache directories
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
 # Expose port 80 for Nginx
 EXPOSE 80
 

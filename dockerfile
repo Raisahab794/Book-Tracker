@@ -44,4 +44,4 @@ EXPOSE 80
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Start Nginx and PHP-FPM
-CMD service php8.0-fpm start && nginx -g 'daemon off;'
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]

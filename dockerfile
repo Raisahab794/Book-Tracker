@@ -19,7 +19,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     libonig-dev \
     libxml2-dev \
-    libzip-dev
+    libzip-dev \
+    nginx
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -36,9 +37,11 @@ COPY . /var/www
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . /var/www
 
-# Change current user to www
-USER www-data
+# Expose port 80 for Nginx
+EXPOSE 80
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+# Copy Nginx configuration file
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Start Nginx and PHP-FPM
+CMD service php8.0-fpm start && nginx -g 'daemon off;'

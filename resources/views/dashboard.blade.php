@@ -12,8 +12,8 @@
         border-radius: 50%;
     }
     .icon {
-        width: 1.5rem; 
-        height: 1.5rem; 
+        width: 1.4rem; 
+        height: 1.4rem; 
     }
 </style>
 
